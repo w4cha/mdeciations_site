@@ -1,0 +1,60 @@
+{% extends "laboratorio/base.html" %}
+{% block title %}
+    Carrito de compras
+{% endblock title %}
+{% block content %}
+<div class="w-100 text-center">
+    {% if messages %}
+    {% for message in messages %}
+    <!--message.tags return the type of message success error warnings, etc-->
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message|safe }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
+<div class="d-flex flex-column align-items-center" id="compras">
+{% if compras %}
+    <h1>Tus compras <span>({{ compras|length }})</span></h1>
+    <table class="table table-bordered rounded">
+        <thead class="table-dark">
+            <tr>
+                <th>Item</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        {% for item in compras %}
+        <tr>
+            <td><a hx-get="{% url 'lab:detail' pk=item.compra.pk %}?cart=ok" hx-target="#userauth" hx-swap="innerHTML" class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                {{ item.compra.nombre }}</a></td>
+            <td>{{ item.cantidad }}</td>
+            <td>${{ item.compra.venta_producto }}</td>
+            <td>${{ item.subtotal }}</td>
+            <td><button type="button" class="btn btn-danger" hx-get="{% url 'lab:delist' pk=item.pk %}" hx-target="#userauth" hx-swap="innerHTML">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-x-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                    <path
+                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                </svg>
+            </button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <div class="text-center">
+        <h5>total a pagar: ${{ total.total }}</h5>
+    </div>
+{% else %}
+    <div class="text-center">
+        <h1>No has realizado ninguna compra aún</h1>
+        <img src="https://i.imgur.com/bLLZVA4.png" alt="empty-cart" class="rounded">
+    </div>
+{% endif %}
+</div>
+{% endblock content %}

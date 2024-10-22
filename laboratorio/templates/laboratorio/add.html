@@ -1,0 +1,272 @@
+
+<button class="cerrar" onclick="document.getElementById('change_target').close();">X</button>
+<div class="d-flex flex-column align-items-center" id="add-entry">
+    <div class="w-100 text-center">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message|safe }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+    {% if crud == "create" %}
+        {% if ntable == 1 %}
+            <h1>Nuevo Laboratorio</h1>
+            {% elif ntable == 2 %}
+            <h3>Nuevo Director</h1>
+            {% else %}
+            <h1>Nuevo Producto</h1>
+        {% endif %}
+    {% else %}
+        {% if ntable == 1 %}
+            <h1>Editar Laboratorio</h1>
+        {% elif ntable == 2 %}
+            <h3>Editar Director</h1>
+        {% else %}
+            <h1>Editar Producto</h1>
+        {% endif %}
+    {% endif %}
+    {% if crud == "create" %}
+        <form hx-post="{% url 'lab:add' tabla=ntable %}" hx-target="#change_target" hx-swap="innerHTML" class="d-flex flex-column align-items-center">
+    {% else %}
+        <form hx-post="{% url 'lab:update' tabla=ntable pk=pk %}" hx-target="#change_target" hx-swap="innerHTML" class="d-flex flex-column align-items-center">
+    {% endif %}
+        <!--non_field_errors is a list of errors-->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger text-center w-75" role="alert">
+                {% for non_error in form.non_field_errors %}
+                    {{ non_error }}<br>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- token seguridad -->
+        {% csrf_token %}
+        <!-- itera sobre los elementos de la form de django -->
+        {% for field in form %}
+        <div class="my-2 d-flex flex-column">
+            {% if field.errors %}
+            <div class="alert alert-danger text-center" role="alert">
+                {% for error in field.errors %}
+                {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+            {{ field.label_tag }}
+            {{ field }}
+            {% if "País" in field.label %}
+            <datalist id="countries">
+                <option value="Afganistán">
+                <option value="Albania">
+                <option value="Alemania">
+                <option value="Andorra">
+                <option value="Angola">
+                <option value="Antigua y Barbuda">
+                <option value="Arabia Saudita">
+                <option value="Argelia">
+                <option value="Argentina">
+                <option value="Armenia">
+                <option value="Australia">
+                <option value="Austria">
+                <option value="Azerbaiyán">
+                <option value="Bahamas">
+                <option value="Bangladés">
+                <option value="Barbados">
+                <option value="Baréin">
+                <option value="Bélgica">
+                <option value="Belice">
+                <option value="Benín">
+                <option value="Bielorrusia">
+                <option value="Birmania">
+                <option value="Bolivia">
+                <option value="Bosnia y Herzegovina">
+                <option value="Botsuana">
+                <option value="Brasil">
+                <option value="Brunéi">
+                <option value="Bulgaria">
+                <option value="Burkina Faso">
+                <option value="Burundi">
+                <option value="Bután">
+                <option value="Cabo Verde">
+                <option value="Camboya">
+                <option value="Camerún">
+                <option value="Canadá">
+                <option value="Catar">
+                <option value="Chad">
+                <option value="Chile">
+                <option value="China">
+                <option value="Chipre">
+                <option value="Ciudad del Vaticano">
+                <option value="Colombia">
+                <option value="Comoras">
+                <option value="Corea del Norte">
+                <option value="Corea del Sur">
+                <option value="Costa de Marfil">
+                <option value="Costa Rica">
+                <option value="Croacia">
+                <option value="Cuba">
+                <option value="Dinamarca">
+                <option value="Dominica">
+                <option value="Ecuador">
+                <option value="Egipto">
+                <option value="El Salvador">
+                <option value="Emiratos Árabes Unidos">
+                <option value="Eritrea">
+                <option value="Eslovaquia">
+                <option value="Eslovenia">
+                <option value="España">
+                <option value="Estados Unidos">
+                <option value="Estonia">
+                <option value="Esuatini">
+                <option value="Etiopía">
+                <option value="Filipinas">
+                <option value="Finlandia">
+                <option value="Fiyi">
+                <option value="Francia">
+                <option value="Gabón">
+                <option value="Gambia">
+                <option value="Georgia">
+                <option value="Ghana">
+                <option value="Granada">
+                <option value="Grecia">
+                <option value="Guatemala">
+                <option value="Guinea">
+                <option value="Guinea-Bisáu">
+                <option value="Guinea Ecuatorial">
+                <option value="Guyana">
+                <option value="Haití">
+                <option value="Honduras">
+                <option value="Hungría">
+                <option value="India">
+                <option value="Indonesia">
+                <option value="Irak">
+                <option value="Irán">
+                <option value="Irlanda">
+                <option value="Islandia">
+                <option value="Islas Marshall">
+                <option value="Islas Salomón">
+                <option value="Israel">
+                <option value="Italia">
+                <option value="Jamaica">
+                <option value="Japón">
+                <option value="Jordania">
+                <option value="Kazajistán">
+                <option value="Kenia">
+                <option value="Kirguistán">
+                <option value="Kiribati">
+                <option value="Kuwait">
+                <option value="Laos">
+                <option value="Lesoto">
+                <option value="Letonia">
+                <option value="Líbano">
+                <option value="Liberia">
+                <option value="Libia">
+                <option value="Liechtenstein">
+                <option value="Lituania">
+                <option value="Luxemburgo">
+                <option value="Macedonia del Norte">
+                <option value="Madagascar">
+                <option value="Malasia">
+                <option value="Malaui">
+                <option value="Maldivas">
+                <option value="Malí">
+                <option value="Malta">
+                <option value="Marruecos">
+                <option value="Mauricio">
+                <option value="Mauritania">
+                <option value="México">
+                <option value="Micronesia">
+                <option value="Moldavia">
+                <option value="Mónaco">
+                <option value="Mongolia">
+                <option value="Montenegro">
+                <option value="Mozambique">
+                <option value="Namibia">
+                <option value="Nauru">
+                <option value="Nepal">
+                <option value="Nicaragua">
+                <option value="Níger">
+                <option value="Nigeria">
+                <option value="Noruega">
+                <option value="Nueva Zelanda">
+                <option value="Omán">
+                <option value="Países Bajos">
+                <option value="Pakistán">
+                <option value="Palaos">
+                <option value="Panamá">
+                <option value="Papúa Nueva Guinea">
+                <option value="Paraguay">
+                <option value="Perú">
+                <option value="Polonia">
+                <option value="Portugal">
+                <option value="Reino Unido">
+                <option value="República Centroafricana">
+                <option value="República Checa">
+                <option value="República del Congo">
+                <option value="República Democrática del Congo">
+                <option value="República Dominicana">
+                <option value="Ruanda">
+                <option value="Rumania">
+                <option value="Rusia">
+                <option value="Samoa">
+                <option value="San Cristóbal y Nieves">
+                <option value="San Marino">
+                <option value="San Vicente y las Granadinas">
+                <option value="Santa Lucía">
+                <option value="Santo Tomé y Príncipe">
+                <option value="Senegal">
+                <option value="Serbia">
+                <option value="Seychelles">
+                <option value="Sierra Leona">
+                <option value="Singapur">
+                <option value="Siria">
+                <option value="Somalia">
+                <option value="Sri Lanka">
+                <option value="Suazilandia">
+                <option value="Sudáfrica">
+                <option value="Sudán">
+                <option value="Sudán del Sur">
+                <option value="Suecia">
+                <option value="Suiza">
+                <option value="Surinam">
+                <option value="Tailandia">
+                <option value="Tanzania">
+                <option value="Tayikistán">
+                <option value="Timor Oriental">
+                <option value="Togo">
+                <option value="Tonga">
+                <option value="Trinidad y Tobago">
+                <option value="Túnez">
+                <option value="Turkmenistán">
+                <option value="Turquía">
+                <option value="Tuvalu">
+                <option value="Ucrania">
+                <option value="Uganda">
+                <option value="Uruguay">
+                <option value="Uzbekistán">
+                <option value="Vanuatu">
+                <option value="Venezuela">
+                <option value="Vietnam">
+                <option value="Yemen">
+                <option value="Yibuti">
+                <option value="Zambia">
+                <option value="Zimbabue">
+            </datalist>
+            {% endif %}
+            {% if field.help_text %}
+            <p class="help my-1 text-end" id="{{ field.auto_id }}_helptext">
+                {{ field.help_text}}
+            </p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="align-self-center">
+            {% if crud == "create" %}
+                <input type="submit" value="Crear" class="btn btn-secondary btn-lg" id="add-entry">
+            {% else %}
+                <input type="submit" value="Actualizar" class="btn btn-secondary btn-lg" id="add-entry">
+            {% endif %}
+        </div>
+    </form>
+</div>

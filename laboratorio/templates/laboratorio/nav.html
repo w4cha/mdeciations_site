@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{% url 'lab:inicio' %}">Farmacia</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <!--asi puedo ver que permiso tiene el usuario desde un template-->
+          <a class="nav-link" href="{% url 'lab:labs' %}">Proveedores</a>
+        </div>
+        <div class="navbar-nav ms-auto">
+          <!--para ver si el usuario esta registrado-->
+          {% if request.user.is_authenticated %}
+          <form action="{% url 'lab:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="nav-link">Salir</button>
+          </form>
+          <a href="{% url 'lab:profile' username=request.user.username  %}" class="nav-link active"><small>Hola, {{ request.user.username }}</small></a>
+          <a href="{% url 'lab:cart' username=request.user.username %}" class="nav-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
+              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+          </svg>
+        </a>
+          {% else %}
+          <div hx-get="{% url 'lab:login' %}" hx-target="#userauth" hx-swap="innerHTML">
+              <button class="nav-link">Entrar</button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>

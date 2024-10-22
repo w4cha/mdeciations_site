@@ -1,0 +1,54 @@
+{% if "cart" in request.GET or cart %}
+    <button class="cerrar" onclick="document.getElementById('userauth').close();">X</button>
+{% else %}
+    <button class="cerrar" onclick="document.getElementById('change_target').close();">X</button>
+{% endif %}
+<div class="d-flex flex-row flex-wrap justify-content-around">
+    <img src="{{ object.url_imagen }}" alt="producto-sin-imagen" width="230" height="230">
+    <div class="d-flex flex-column mx-2 justify-content-center product-buy">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message|safe }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+    <details class="product-buy">
+        <summary>Información</summary>
+        <p>{{ object.descripción }}</p>
+    </details>
+    <small>{{ object.disponibles }} disponibles <br> {{ object.venta_producto }} cada uno</small>
+    {% if request.user.is_authenticated %}
+        {% if object.disponibles %}
+        <!--csfr token not necessary if htmx and token is in body-->
+        <!--other way of checking url args ?= in the template-->
+        {% if "cart" in request.GET or cart %}
+            <form class="d-flex flex-column" hx-post="{% url 'lab:add-cart' pk=object.pk %}" hx-target="#userauth" hx-swap="innerHTML">
+            <input type="hidden" id="origen_buy" name="origen_buy" value="cart">
+        {% else %}
+            <form class="d-flex flex-column" hx-post="{% url 'lab:add-cart' pk=object.pk %}" hx-target="#change_target" hx-swap="innerHTML">
+                <input type="hidden" id="origen_buy" name="origen_buy" value="products">
+        {% endif %}
+            {% for field in form %}
+                {% if field.errors %}
+                    <div class="alert alert-danger text-center" role="alert">
+                        {% for error in field.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {{ field.label_tag }}
+                {{ field }}
+            {% endfor %}
+            <input type="submit" class="btn btn-primary mt-1" value="Añadir al carro">
+        </form>
+        <small id="subtotal">subtotal: ${{ object.venta_producto|floatformat }}</small>
+        {% else %}
+            <small>no hay unidades disponibles actualmente</small>
+        {% endif %}
+    {% else %}
+        <small>necesita estar <a hx-get="{% url 'lab:login' %}?origen=other" hx-target="#change_target" hx-swap="innerHTML" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">registrado</a> para poder realizar una compra</small>
+    {% endif %}
+    </div>
+</div>

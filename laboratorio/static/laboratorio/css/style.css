@@ -1,0 +1,121 @@
+:root {
+    --close-color: #ec3f3f;
+    --button-default : #6c757d;
+    --button-text: #ffffff;
+    --body-bg: radial-gradient(circle, rgba(174,238,206,1) 0%, rgba(190,233,148,1) 100%);
+    --dialog-bg: #93e3a4;
+    --tr-bg: #a8fbff;
+}
+
+/* this was necessary because it was not showing as pointer in some places*/
+a {
+    cursor: pointer;
+}
+
+body {
+    background: var(--body-bg);
+}
+
+dialog {
+    border-color: black;
+    border-width: 3px;
+    border-radius: 5%;
+    background-color: var(--dialog-bg);
+    top: 15%;
+    opacity: 0;
+    translate: 0 10vh;
+    transition-property: overlay display opacity;
+    transition-duration: 1s;
+    transition-behavior: allow-discrete;
+}
+
+dialog[open] {
+    display: block;
+    opacity: 1;
+    translate: 0 0;
+    @starting-style {
+        opacity: 0;
+        translate: 0 -20vh;
+    }
+}
+
+small {
+    cursor: pointer;
+}
+
+/** table with vertical scrolling **/
+table {
+    display: block;
+    height: 270px;
+    width: fit-content !important;
+    overflow-y: auto;
+}
+
+tbody {
+    max-height: 300px;
+}
+
+td {
+    background-color: var(--tr-bg) !important;
+}
+
+#edit_vehicle {
+    width: clamp(30vw, 40vw, 60vw);
+}
+
+#delete_vehicle {
+    width: clamp(15vw, 20vw, 25vw);
+}
+
+.limit {
+    width: clamp(8vw, 12vw, 15vw);
+    margin: auto;
+}
+
+.cerrar {
+    background-color:  var(--button-default);
+    border: 3px, solid, black;
+    color: var(--button-text);
+    border-radius: 50%;
+    min-width: 30px;
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    transform: translate(50%, -50%);
+}
+
+.cerrar:hover {
+    background-color: var(--close-color);
+}
+
+details {
+    max-height: 5vh;
+    overflow: hidden;
+    /* short cut for transition property, duration and timing function */
+    transition: max-height 1s ease-in;
+    transition-behavior: allow-discrete;
+}
+
+details[open] {
+    max-height: 35vh;
+    transition: max-height 1s ease-out;
+}
+
+.profile-details {
+    max-height: 15vh;
+}
+
+.profile-details[open] {
+    max-height: 72vh;
+}
+
+.product-buy {
+    max-width: 200px;
+}
+
+.user-info > h5 {
+    border-style: solid;
+    border-radius: 7px;
+    border-color: #065402;
+    border-width: 5px;
+}

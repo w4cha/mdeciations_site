@@ -1,0 +1,87 @@
+{% if origen == "main" %}
+    <button class="cerrar" onclick="document.getElementById('userauth').close();">X</button>
+{% else %}
+    <button class="cerrar" onclick="document.getElementById('change_target').close();">X</button>
+{% endif %}
+<div class="d-flex flex-column align-items-center">
+    {% if action == "login" %}
+        <h3>Iniciar sesión</h3>
+        <div class="my-1">
+            {% if origen == "main" %}
+                <small>No tienes una cuenta 
+                    <a hx-get="{% url 'lab:register' %}" hx-target="#userauth" hx-swap="innerHTML" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    regístrate</a>
+                </small>
+            </div>
+            <form hx-post="{% url 'lab:login' %}" hx-target="#userauth" hx-swap="innerHTML">
+            {% else %}
+                <small>No tienes una cuenta 
+                    <a hx-get="{% url 'lab:register' %}?origen=other" hx-target="#change_target" hx-swap="innerHTML" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    regístrate</a>
+                </small>
+            </div>
+            <form hx-post="{% url 'lab:login' %}" hx-target="#change_target" hx-swap="innerHTML">
+            {% endif %}
+    {% else %}
+        <h3>Crear Cuenta</h3>
+        <div class="my-1">
+            {% if origen == "main" %}
+                <small>Tienes una cuenta 
+                    <a hx-get="{% url 'lab:login' %}" hx-target="#userauth" hx-swap="innerHTML" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    iniciar sesión</a>
+                </small>
+            </div>
+            <form hx-post="{% url 'lab:register' %}" hx-target="#userauth" hx-swap="innerHTML">
+            {% else %}
+                <small>Tienes una cuenta 
+                    <a hx-get="{% url 'lab:login' %}?origen=other" hx-target="#change_target" hx-swap="innerHTML" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                    iniciar sesión</a>
+                </small>
+            </div>
+            <form hx-post="{% url 'lab:register' %}" hx-target="#change_target" hx-swap="innerHTML">
+            {% endif %}
+        {% endif %}
+        {% csrf_token %}
+        <!--use this to pass extar info to a post request instead of doing ?key=val-->
+        {% if origen == "main" %}
+            <input type="hidden" id="origen_log" name="origen" value="main">
+        {% else %}
+            <input type="hidden" id="origen_log" name="origen" value="other">
+        {% endif %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger text-center" role="alert">
+            {% for error in form.non_field_errors %}
+                {{ error|safe }}
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% for field in form %}
+            <div class="my-2 d-flex flex-column align-items-center">
+            {% if field.errors %}
+                <div class="alert alert-danger text-center" role="alert">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+                <p>{{ field.label_tag }}</p>
+                <div>{{ field }}</div>
+                {% if field.help_text %}
+                    <details>
+                        <summary>Ayuda</summary>
+                        <p class="help my-1 text-center" id="{{ field.auto_id }}_helptext">
+                            {{ field.help_text|safe }}
+                        </p>
+                    </details> 
+                {% endif %}
+            </div>
+        {% endfor %}
+        <div class="text-center">
+            {% if action == "login" %}
+                <input type="submit" value="Entrar" class="btn btn-secondary btn-lg">
+            {% else %}
+                <input type="submit" value="Crear" class="btn btn-secondary btn-lg">
+            {% endif %}
+        </div>
+    </form>
+</div>

@@ -1,0 +1,122 @@
+{% extends "laboratorio/base.html" %}
+<!--use hx after swap to update the title-->
+{% block title %}
+Listado de laboratorios
+{% endblock title %}
+{% block content %}
+<main>
+    <div id="changeable-content" hx-get="{% url 'lab:other-list' %}?change={{ ntable }}" hx-swap="outerHTML"
+        hx-trigger="reload from:body" hx-target="#changeable-content">
+        <div class="w-100 text-center">
+            {% if messages %}
+            {% for message in messages %}
+            <!--message.tags return the type of message success error warnings, etc-->
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message|safe }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if información_tabla %}
+        <div class="mx-2 overflow-auto">
+            <div class="d-flex flex-row flex-wrap mt-2">
+                <h3 class="me-auto">Listado de laboratorios</h3>
+                <form action="" method="GET" id="búsqueda">
+                    <input name="resultados" type="text" placeholder="Buscar laboratorio" id="resultado_busqueda">
+                    <input class="btn btn-secondary" type="submit" value="Buscar">
+                </form>
+            </div>
+            <table class="table my-2 mx-auto rounded">
+                <thead class="table-dark">
+                    <tr>
+                        {% for key in thead %}
+                        <th>{{ key|title }}</th>
+                        {% endfor %}
+                        {% if perms.laboratorio.change_laboratorio %}
+                        <th>Editar</th>
+                        {% endif %}
+                        {% if perms.laboratorio.delete_laboratorio %}
+                        <th>Eliminar</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in información_tabla %}
+                    <tr>
+                        <!--get_<nombre_campo_modelo>_display para obtener el valor de un campo
+                        si este no es fácilmente entendible para el usuario recomendable en
+                        campos que usan el argumento choice -->
+                        {% for data in entry|slice:"1:" %}
+                        <td>{{ data }}</td>
+                        {% endfor %}
+                        {% if perms.laboratorio.change_laboratorio %}
+                        <td><button type="button" class="btn btn-primary"
+                                hx-get="{% url 'lab:update' tabla=ntable pk=entry|first %}" hx-target="#change_target"
+                                hx-swap="innerHTML">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path
+                                        d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325" />
+                                </svg>
+                            </button></td>
+                        {% endif %}
+                        {% if perms.laboratorio.delete_laboratorio %}
+                        <td><button type="button" class="btn btn-danger"
+                                hx-get="{% url 'lab:delete' tabla=ntable pk=entry|first %}" hx-target="#change_target"
+                                hx-swap="innerHTML">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-x-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                                    <path
+                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                </svg>
+                            </button></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if perms.laboratorio.view_laboratorio %}
+        <div class="my-2 text-center">
+            <a href="{% url 'lab:get-csv' tabla=ntable %}?resultados={{ download }}" download
+                class="link-success link h5">descargar
+                datos
+                actuales tabla
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-filetype-csv" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM3.517 14.841a1.13 1.13 0 0 0 .401.823q.195.162.478.252.284.091.665.091.507 0 .859-.158.354-.158.539-.44.187-.284.187-.656 0-.336-.134-.56a1 1 0 0 0-.375-.357 2 2 0 0 0-.566-.21l-.621-.144a1 1 0 0 1-.404-.176.37.37 0 0 1-.144-.299q0-.234.185-.384.188-.152.512-.152.214 0 .37.068a.6.6 0 0 1 .246.181.56.56 0 0 1 .12.258h.75a1.1 1.1 0 0 0-.2-.566 1.2 1.2 0 0 0-.5-.41 1.8 1.8 0 0 0-.78-.152q-.439 0-.776.15-.337.149-.527.421-.19.273-.19.639 0 .302.122.524.124.223.352.367.228.143.539.213l.618.144q.31.073.463.193a.39.39 0 0 1 .152.326.5.5 0 0 1-.085.29.56.56 0 0 1-.255.193q-.167.07-.413.07-.175 0-.32-.04a.8.8 0 0 1-.248-.115.58.58 0 0 1-.255-.384zM.806 13.693q0-.373.102-.633a.87.87 0 0 1 .302-.399.8.8 0 0 1 .475-.137q.225 0 .398.097a.7.7 0 0 1 .272.26.85.85 0 0 1 .12.381h.765v-.072a1.33 1.33 0 0 0-.466-.964 1.4 1.4 0 0 0-.489-.272 1.8 1.8 0 0 0-.606-.097q-.534 0-.911.223-.375.222-.572.632-.195.41-.196.979v.498q0 .568.193.976.197.407.572.626.375.217.914.217.439 0 .785-.164t.55-.454a1.27 1.27 0 0 0 .226-.674v-.076h-.764a.8.8 0 0 1-.118.363.7.7 0 0 1-.272.25.9.9 0 0 1-.401.087.85.85 0 0 1-.478-.132.83.83 0 0 1-.299-.392 1.7 1.7 0 0 1-.102-.627zm8.239 2.238h-.953l-1.338-3.999h.917l.896 3.138h.038l.888-3.138h.879z" />
+                </svg>
+            </a>
+        </div>
+        {% endif %}
+        {% else %}
+        <div class="text-center mt-4">
+            <h3>No hay Laboratorios disponibles</h3>
+            <img src="https://i.imgur.com/rHUPbp3.jpeg" class="rounded img-fluid">
+        </div>
+        {% endif %}
+        {% if perms.laboratorio.add_laboratorio %}
+        <div class="w-100 text-center my-4">
+            <button class="btn btn-secondary" hx-get="{% url 'lab:add' tabla=ntable %}"
+                hx-target="#change_target" hx-swap="innerHTML">Añadir</button>
+        </div>
+        {% endif %}
+    </div>
+</main>
+<div class="d-flex flex-column align-items-center">
+    <select name="change" hx-post="{% url 'lab:other-list' %}" id="change-table" hx-trigger="change"
+        hx-target="#changeable-content" hx-swap="outerHTML" onchange="change(this.value);">
+        <option value="1" selected>Laboratorios</option>
+        {% if perms.laboratorio.view_directorgeneral %}
+            <option value="2">Directores generales</option>
+        {% endif %}
+        <option value="3">Productos</option>
+    </select>
+</div>
+<!--to do an action after an htmx even use hx-on:: on the target of the action-->
+<dialog id="change_target" hx-on::after-swap="document.getElementById('change_target').show();">
+</dialog>
+{% endblock content %}

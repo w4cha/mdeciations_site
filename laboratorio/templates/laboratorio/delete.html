@@ -1,0 +1,19 @@
+{% if not ntable %}
+    <button class="cerrar" onclick="document.getElementById('userauth').close();">X</button>
+    <div class="align-self-center d-flex flex-column text-center">
+        <!--you can do it like this if you are going to redirect instead of swapping-->
+        {% if request.resolver_match.view_name == "lab:del-user" %}
+            <h6>Presione el botón para confirmar <br> (cuenta: {{ elabel }})</h6>
+            <button class="btn btn-secondary btn-md limit" hx-delete="{% url 'lab:del-user' username=request.user.username %}">Borrar</button>
+        {% else %}
+            <h6>Presione el botón para confirmar <br> ({{ elabel }})</h6>
+            <button class="btn btn-secondary btn-md limit" hx-delete="{% url 'lab:delist' pk=entry %}">Borrar</button>
+        {% endif %}
+    </div>
+{% else %}
+    <button class="cerrar" onclick="document.getElementById('change_target').close();">X</button>
+    <div class="align-self-center d-flex flex-column text-center">
+        <h6>Presione el botón para confirmar (entrada: {{ elabel }})</h6>
+        <button class="btn btn-secondary btn-md limit" hx-delete="{% url 'lab:delete' tabla=ntable pk=entry %}" hx-target="#changeable-content" hx-swap="outerHTML" onclick="document.getElementById('change_target').close();">Borrar</button>
+    </div>
+{% endif %}
