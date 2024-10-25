@@ -28,3 +28,11 @@ def link_list(*args):
         else:
             raise ValueError("all arguments must be in form of a list")
     return returned_value
+
+@register.filter(name="index")
+def item_index(item, place):
+    if not isinstance(item, (list, tuple)):
+        raise ValueError(f"object to index must be of type list or tuple but it was {type(item).__name__} instead")
+    if not isinstance(place, int):
+        raise ValueError(f"index must me an int but it was {type(place).__name__} instead")
+    return item[place]

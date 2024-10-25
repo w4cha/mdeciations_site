@@ -149,9 +149,8 @@ def change_table(request):
                     thead += [current_table._meta.get_field("costo_producto").verbose_name,]
                     table_fields += ["margen",]
                     thead += ["margen de ganancia",]
-                if request.user.is_authenticated:
-                    table_fields += ["disponibles"]
-                    thead += ["cantidad disponible"]
+                table_fields += ["disponibles"]
+                thead += ["cantidad disponible"]
                 thead += [current_table._meta.get_field("laboratorio").verbose_name,]
                 table_fields += ["laboratorio__nombre"] 
             tvalues = current_table.objects.order_by("nombre")
