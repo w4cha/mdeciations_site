@@ -1,7 +1,7 @@
 #Ignore folders
 __pycache__
 
-# ifnore extensions
+# ignore extensions
 *.env
 *.txt
 *.sql
