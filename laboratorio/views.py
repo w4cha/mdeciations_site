@@ -475,7 +475,7 @@ def add_to_cart(request, pk):
                     'link-underline-opacity-100-hover">ver detalle</a>')
             messages.success(request, f"{form.cleaned_data['cantidad']} añadido al carro {link}", "éxito")
             # like this to update the quantity after each purchase
-            if request.POST.get("rigen_buy") == "products":
+            if request.POST.get("origen_buy") == "products":
                 context = {"object": Producto.objects.get(pk=pk), "form": AddToCartForm(pk), "cart": False}
                 response = render(request, "laboratorio/detail.html", context)
                 response.headers['HX-Trigger'] = "reload"
