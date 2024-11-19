@@ -1,4 +1,4 @@
-# Django .
+# Django medications store.
 ### Description:
 This project is a prototype for a site where you can list medicaments (similar 
 to a pharmacy online store for over the counter products). 
